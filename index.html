@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      src="https://kit.fontawesome.com/919c988439.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="wrap" class="bg-black d-flex flex-md-row flex-column">
+      <nav id="menu">
+        Home <br />
+        Songs for Weather Search <br />
+        날씨 보여주는 창?
+      </nav>
+      <main id="main" class="col">
+        <header id="header">
+          <!--디자인 변경 필요-->
+          <button id="signup-button">Sign up</button>
+          <button id="login-button">Log in</button>
+        </header>
+        <section id="section" class="artist-area">
+        <section id="artist-header">
+          <div class="overlay-text">
+            <!--변경필요-->
+            <div class="artist-artist-name">NewJeans</div>
+            <!--변경필요-->
+            <div class="artist-monthly-listener">followers</div>
+          </div>
+          <div class="artist-contents-card">
+            <div class="artist-card-img-box ">
+              <div class="artist-card-play-btn"></div>
+              <div class="artist-card-img">
+                <img
+                  src="https://i.scdn.co/image/ab6761610000517480668ba2b15094d083780ea9"
+                  alt=""
+                />
+            </div>
+            </div>
+          </div>
+        </section>
+        
+          <section class="artist-button-area">
+            <!--디자인 변경 필요-->
+            <button>재생</button>
+            <button>팔로우하기</button>
+          </section>
+          <section>
+            <div class="artist-popular">
+              <div id="artist-popular-title">인기</div>
+              <div class="row artist-popular-chart">
+                <!--동적으로 수정-->
+              </div>
+            </div>
+            <div class="artist-popular-music">
+              <div id="artist-popular-music-title">인기 음악</div>
+              <div class="artist-popular-music-details">
+                앨범커버 노래제목 발매년도 * 앨범종류
+              </div>
+            </div>
+            <div class="artist-album">
+              <div id="artist-album-title">앨범</div>
+              <div class="artist-album-details">
+                앨범커버 앨범이름 발매년도 * 앨범
+              </div>
+            </div>
+            <div class="artist-singles-eps">
+              <div id="artist-singles-eps-title">싱글 및 EP</div>
+              <div class="artist-singles-eps-details">
+                앨범커버 노래제목 발매년도 * 앨범종류
+              </div>
+            </div>
+            <div class="artist-artist-rec">
+                <div id="artist-artist-rec-title">추천 아티스트</div>
+                <div class="artist-artist-rec-details">
+                    <div>아티스트 이름 * 팔로워수</div>
+                </div>
+              </div>
+          </section>
+        </section>
+      </main>
+    </div>
+    <!-- #wrap -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="main.js"></script>
+  </body>
+</html>

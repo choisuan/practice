@@ -1,0 +1,172 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap");
+
+:root {
+  --main-font-color: #b3b3b3;
+  --background-base: #121212;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+ol,
+ul {
+  list-style: none;
+  padding: 0;
+}
+a {
+  text-decoration: none;
+  color: var(--main-font-color);
+  display: block;
+}
+button {
+  background: none;
+  border: none;
+  color: var(--main-font-color);
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+input,
+select,
+textarea,
+fieldset {
+  border: 0;
+}
+caption,
+legend {
+  display: none;
+}
+img {
+  vertical-align: top;
+  border: 0;
+}
+address {
+  font-style: normal;
+}
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  color: var(--main-font-color);
+  cursor: default;
+}
+
+#wrap {
+  padding: 0.5rem;
+}
+#menu {
+  @media screen and (min-width: 768px) {
+    background-color: orange;
+    width: 238px;
+    height: calc(100vh - 1rem);
+    margin-right: 0.5rem;
+  }
+  /* position: fixed; */
+}
+#main {
+  border: 1px solid #fff;
+}
+#header {
+  height: 4rem;
+  background-color: #e5e5e5;
+  position: relative;
+}
+#section {
+  padding-inline: 1rem;
+}
+
+#signup-button {
+  position: absolute;
+  top: 20px;
+  right: 10px;
+}
+#login-button {
+  position: absolute;
+  top: 20px;
+  right: 80px;
+}
+.artist-button-area {
+  display: flex;
+  padding: 1rem 0.5rem;
+}
+.artist-button-area button {
+  margin: 0.5rem;
+}
+.artist-popular-img {
+  height: 40px;
+  width: 40px;
+  border-radius: 5px;
+}
+.artist-popular-chart {
+  padding: 10px 0;
+  border-radius: 5px;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.artist-song-name {
+  color: #fff;
+}
+.artist-song-name:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.artist-artist-rec,
+.artist-popular-music,
+.artist-album,
+.artist-singles-eps {
+  padding-top: 3rem;
+}
+#artist-popular-title,
+#artist-artist-rec-title,
+#artist-popular-music-title,
+#artist-album-title,
+#artist-singles-eps-title {
+  font-size: 27px;
+  font-weight: bold;
+  color: #fff;
+  padding-left: 1rem;
+}
+.artist-area {
+  background: linear-gradient(to bottom, #15253c, #000000);
+  position: relative;
+  top: 0;
+  height: 20%;
+  width: 100%;
+}
+#artist-header {
+  position: relative;
+  height: 250px;
+  width:100%;
+  overflow: hidden;
+}
+.overlay-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: absolute;
+  top: 50px;
+  left: 250px;
+}
+.artist-artist-name {
+  font-size: 80px;
+  font-weight: 900;
+  color: #fff;
+}
+.artist-monthly-listener {
+  font-size: 20px;
+  color: #fff;
+}
+.artist-card-img img {
+    border-radius: 100% ;
+    width: 200px;
+    position: absolute;
+    top: 40px;
+    left:20px;
+}
+
