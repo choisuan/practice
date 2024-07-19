@@ -26,67 +26,90 @@
       </nav>
       <main id="main" class="col">
         <header id="header">
-          <!--디자인 변경 필요-->
+          <!--변경 필요-->
           <button id="signup-button">Sign up</button>
           <button id="login-button">Log in</button>
         </header>
         <section id="section" class="artist-area">
-        <section id="artist-header">
-          <div class="overlay-text">
-            <!--변경필요-->
-            <div class="artist-artist-name">NewJeans</div>
-            <!--변경필요-->
-            <div class="artist-monthly-listener">followers</div>
-          </div>
-          <div class="artist-contents-card">
-            <div class="artist-card-img-box ">
-              <div class="artist-card-play-btn"></div>
+          <section id="artist-header">
+            <div class="overlay-text">
+              <!--변경필요-->
+              <div class="artist-artist-name">NewJeans</div>
+              <!--변경필요-->
+              <div class="artist-monthly-listener">followers</div>
+              <!--디자인 변경 필요-->
+              <span class="artist-button-area"
+                ><button>팔로우하기</button></span
+              >
+            </div>
+            <div class="artist-card-img-box">
               <div class="artist-card-img">
                 <img
                   src="https://i.scdn.co/image/ab6761610000517480668ba2b15094d083780ea9"
                   alt=""
                 />
+              </div>
+              <div class="artist-card-play-btn"></div>
             </div>
-            </div>
-          </div>
-        </section>
-        
-          <section class="artist-button-area">
-            <!--디자인 변경 필요-->
-            <button>재생</button>
-            <button>팔로우하기</button>
           </section>
           <section>
             <div class="artist-popular">
-              <div id="artist-popular-title">인기</div>
+                <div class="contents-header">
+                    <a href="#" class="contents-header-title h4 text-white"
+                      >인기</a
+                    >
+                  </div>
               <div class="row artist-popular-chart">
                 <!--동적으로 수정-->
               </div>
             </div>
-            <div class="artist-popular-music">
-              <div id="artist-popular-music-title">인기 음악</div>
-              <div class="artist-popular-music-details">
-                앨범커버 노래제목 발매년도 * 앨범종류
-              </div>
-            </div>
-            <div class="artist-album">
-              <div id="artist-album-title">앨범</div>
-              <div class="artist-album-details">
-                앨범커버 앨범이름 발매년도 * 앨범
-              </div>
-            </div>
-            <div class="artist-singles-eps">
-              <div id="artist-singles-eps-title">싱글 및 EP</div>
-              <div class="artist-singles-eps-details">
-                앨범커버 노래제목 발매년도 * 앨범종류
-              </div>
-            </div>
-            <div class="artist-artist-rec">
-                <div id="artist-artist-rec-title">추천 아티스트</div>
-                <div class="artist-artist-rec-details">
-                    <div>아티스트 이름 * 팔로워수</div>
+
+            <!--여기서부터 반복-->
+            <div class="contents-container d-flex flex-column gap-4">
+              <div class="contents-line">
+                <div class="contents-header">
+                  <a href="#" class="contents-header-title h4 text-white"
+                    >인기 음악</a
+                  >
+                </div>
+                <div class="card-container" id="artist-popular-music">
+                  <!--동적으로 수정-->
                 </div>
               </div>
+
+              <div class="contents-line">
+                <div class="contents-header">
+                  <a href="#" class="contents-header-title h4 text-white"
+                    >앨범</a
+                  >
+                </div>
+                <div class="card-container" id="artist-album">
+                  <!--동적으로 수정-->
+                </div>
+              </div>
+
+              <div class="contents-line">
+                <div class="contents-header">
+                  <a href="#" class="contents-header-title h4 text-white"
+                    >싱글 및 EP</a
+                  >
+                </div>
+                <div class="card-container" id="artist-single-eps">
+                  <!--동적으로 수정-->
+                </div>
+              </div>
+
+              <div class="contents-line">
+                <div class="contents-header">
+                  <a href="#" class="contents-header-title h4 text-white"
+                    >추천 아티스트</a
+                  >
+                </div>
+                <div class="card-container" id="artist-artist-rec">
+                  <!--동적으로 수정-->
+                </div>
+              </div>
+            </div>
           </section>
         </section>
       </main>

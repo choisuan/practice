@@ -76,7 +76,6 @@ body {
 #section {
   padding-inline: 1rem;
 }
-
 #signup-button {
   position: absolute;
   top: 20px;
@@ -87,27 +86,22 @@ body {
   top: 20px;
   right: 80px;
 }
-.artist-button-area {
+.artist-popular-charts-container .artist-popular-chart {
+  padding: 10px 0;
+  border-radius: 5px;
+  margin: 0 auto;
   display: flex;
-  padding: 1rem 0.5rem;
-}
-.artist-button-area button {
-  margin: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 .artist-popular-img {
   height: 40px;
   width: 40px;
   border-radius: 5px;
 }
-.artist-popular-chart {
-  padding: 10px 0;
-  border-radius: 5px;
-  max-width: 100%;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.additional-tracks {
+  width: 100%;
 }
 .artist-song-name {
   color: #fff;
@@ -116,21 +110,12 @@ body {
   text-decoration: underline;
   cursor: pointer;
 }
-.artist-artist-rec,
-.artist-popular-music,
-.artist-album,
-.artist-singles-eps {
-  padding-top: 3rem;
-}
-#artist-popular-title,
-#artist-artist-rec-title,
-#artist-popular-music-title,
-#artist-album-title,
-#artist-singles-eps-title {
-  font-size: 27px;
-  font-weight: bold;
+.play-icon:hover,
+.heart-icon:hover,
+.more-icon:hover,
+.read-more:hover,
+.brief-view:hover {
   color: #fff;
-  padding-left: 1rem;
 }
 .artist-area {
   background: linear-gradient(to bottom, #15253c, #000000);
@@ -141,17 +126,17 @@ body {
 }
 #artist-header {
   position: relative;
-  height: 250px;
-  width:100%;
+  height: 270px;
+  width: 100%;
   overflow: hidden;
 }
 .overlay-text {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   position: absolute;
-  top: 50px;
-  left: 250px;
+  top: 40px;
+  left: 260px;
 }
 .artist-artist-name {
   font-size: 80px;
@@ -161,12 +146,141 @@ body {
 .artist-monthly-listener {
   font-size: 20px;
   color: #fff;
+  padding: 0.5rem;
+}
+.artist-button-area button {
+  display: flex;
+  justify-content: center;
+  font-size: 15px;
+  padding: 5px;
+  margin: 0.5rem 0;
+  border: 2px solid #b3b3b3;
+  border-radius: 30px;
+  width: 110px;
+}
+.artist-button-area button:hover {
+  color: #fff;
+  border: 2px solid #fff;
+}
+.artist-card-img-box {
+  position: relative;
+  transition: all 0.2s ease-out;
+  width: 210px;
+  height: 210px;
 }
 .artist-card-img img {
-    border-radius: 100% ;
-    width: 200px;
-    position: absolute;
-    top: 40px;
-    left:20px;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 40px;
+  left: 20px;
+  z-index: 1;
+}
+.artist-card-play-btn {
+  width: 4rem;
+  height: 4rem;
+  z-index: 2;
+  background: url(img/play-button.png) no-repeat center;
+  background-size: contain;
+  position: absolute;
+  top: 85%;
+  left: 75%;
+  opacity: 0.9;
+  border-radius: 50%;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3);
+}
+.artist-card-play-btn:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+.artist-artist-rec-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  padding: 20px 0;
+}
+.read-more,
+.brief-view {
+  padding-left: 1rem;
+}
+.contents-header {
+  padding: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
+.contents-header-title:hover,
+.contents-header-show-more:hover {
+  text-decoration: underline;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  grid-template-rows: repeat(1, minmax(0, 1fr));
+  grid-auto-rows: 0;
+  overflow: hidden;
+}
+.contents-card {
+  padding: 0.75rem;
+  transition: all 0.2s ease-out;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+.contents-card:hover {
+  background: #1a1a1a;
+}
+.contents-card:hover .card-play-btn {
+  display: block;
+}
+.card-img-box {
+  position: relative;
+  transition: all 0.2s ease-out;
+}
+.card-img {
+  border-radius: 8px;
+  overflow: hidden;
+}
+.card-img img {
+  width: 100%;
+}
+.card-artist-img {
+  border-radius: 50%;
+}
+
+.card-text {
+  margin-top: 0.5rem;
+}
+.card-title {
+  color: var(--white);
+}
+.card-subtitle {
+  font-size: 14px;
+}
+.card-subtitle-artist:hover {
+  text-decoration: underline;
+}
+.card-play-btn {
+  width: 3rem;
+  height: 3rem;
+  z-index: 2;
+  background: url(img/play-button.png) no-repeat center;
+  background-size: contain;
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  opacity: 0.9;
+  display: none;
+  border-radius: 50%;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.3);
+}
+.card-play-btn:hover {
+  transform: scale(1.05);
+  opacity: 1;
+}
+.card-img-box:hover .card-play-btn {
+  display: inline;
+}

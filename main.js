@@ -3,6 +3,10 @@ let artistNames = [];
 let clickedName;
 
 let topTrackList = [];
+let recommendedArtistList = [];
+let artistAlbumList = [];
+let artistSingleEPsList = [];
+let getAlbumList = []
 
 // 토큰 설정
 const getAccessToken = async (CLIENT_ID, CLIENT_SECRET) => {
@@ -46,9 +50,28 @@ const callSpotifyAPI = async () => {
   fetchArtistAlbum(url + "/albums", token);
   fetchArtistTopTrack(url + "/top-tracks", token);
   fetchArtistTopRelated(url + "/related-artists", token);
+  fetchGetAlbums(token)
 };
 
-// 클릭 이벤트 리스너 추가 (변경필요)
+// 앨범 정보 fetch
+const fetchGetAlbums = async (token) => {
+    const url = `https://api.spotify.com/v1/search?q=${clickedName}&type=album`;
+  
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+   const albumData = await response.json();
+   console.log("fetchAlbum", albumData)
+
+   getAlbumList = albumData.albums
+   console.log(getAlbumList)
+  };
+
+
+// 메인페이지 아트스트 클릭 이벤트 (변경필요)
 const artistText = document.querySelector(".artist-artist-name");
 artistText.addEventListener("click", () => {
   clickedName = artistText.textContent.toLocaleLowerCase();
@@ -78,18 +101,17 @@ const artistHeader = (artistData) => {
             <div class="artist-monthly-listener">${
               artistData.followers.total.toLocaleString() + " " + "followers"
             }</div>
+            <span class="artist-button-area"><button>팔로우하기</button></span>
           </div>
-          <div class="artist-contents-card">
             <div class="artist-card-img-box">
-              <div class="artist-card-play-btn"></div>
-              <div class="artist-card-img">
+              <div class="artist-card-img">  
                 <img
                   src="${artistData.images[1].url}"
                   alt=""
                 />
+              </div>
+              <div class="artist-card-play-btn"></div>
             </div>
-            </div>
-          </div>
           </section>`;
   document.getElementById("artist-header").innerHTML = artistHeaderHTML;
 };
@@ -105,6 +127,71 @@ const fetchArtistAlbum = async (artistURL, token) => {
 
   const artistData = await response.json();
   console.log("fetchArtistAlbum", artistData);
+
+  artistAlbumList = artistData.items;
+  artistSingleEPsList = artistData.items;
+  console.log(artistAlbumList);
+  artistAlbum();
+  artistSingleEPs();
+};
+
+// 아티스트 앨범
+const artistAlbum = () => {
+  let artistAlbumListHTML = ``;
+  artistAlbumList.forEach((list) => {
+    if (list.album_group === "album") {
+      artistAlbumListHTML += `
+        <div class="contents-card">
+       <div class="card-img-box position-relative">
+        <div class="card-play-btn"></div>
+        <div class="card-img">
+          <img
+            src="${list.images[1].url}"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="card-text">
+        <p class="card-title artist-card-title">${list.name}</p>
+        <p class="card-subtitle">${
+          list.release_date.slice(0, 4) + " &middot; 앨범"
+        }</p>
+      </div>
+    </div>`;
+    }
+  });
+  document.getElementById("artist-album").innerHTML = artistAlbumListHTML;
+};
+
+// 아티스트 싱글 및 EP
+const artistSingleEPs = () => {
+  let artistSingleEPsListHTML = ``;
+  artistSingleEPsList.forEach((list) => {
+    if (list.album_group === "single") {
+      artistSingleEPsListHTML += `
+        <div class="contents-card">
+       <div class="card-img-box position-relative">
+        <div class="card-play-btn"></div>
+        <div class="card-img">
+          <img
+            src="${list.images[1].url}"
+            alt=""
+          />
+        </div>
+      </div>
+      <div class="card-text">
+        <p class="card-title artist-card-title">${list.name.length>12?list.name.substring(0,10) + "...":list.name}</p>
+        <p class="card-subtitle">${
+          list.release_date.slice(0, 4) , " &middot; " , list.total_tracks <= 3
+            ? "싱글"
+            : "EP"
+        }</p>
+      </div>
+    </div>`;
+    }
+  });
+  document.getElementById("artist-single-eps").innerHTML =
+    artistSingleEPsListHTML;
 };
 
 // 아티스트 탑트랙 정보 fetch
@@ -124,15 +211,30 @@ const fetchArtistTopTrack = async (artistURL, token) => {
   renderTopTracks();
 };
 
+// 차트 hover 함수
+const chartHoverEvents = (event) => {
+  event.forEach((element) => {
+    element.addEventListener("mouseenter", () => {
+      element.style.backgroundColor = "#2A2E33";
+      element.querySelector(".heart-icon").style.display = "inline-block";
+      element.querySelector(".more-icon").style.display = "inline-block";
+    });
+    element.addEventListener("mouseleave", () => {
+      element.style.backgroundColor = "";
+      element.querySelector(".heart-icon").style.display = "none";
+      element.querySelector(".more-icon").style.display = "none";
+    });
+  });
+};
+
 // 아티스트의 탑트랙 렌더링
 const renderTopTracks = () => {
-  let topTracksHTML = ``;
+  let topTracksHTML = `<div class="artist-popular-charts-container">`;
   topTrackList.slice(0, 5).forEach((list, index) => {
     const duration = formatDuration(list.duration_ms);
-
     topTracksHTML += `<div class="row artist-popular-chart">
                 <div class="col-lg-1 text-center">${index + 1}</div>
-                <div class="col-lg-1"><i class="fa-solid fa-play"></i></div>
+                <div class="col-lg-1"><i class="fa-solid fa-play play-icon"></i></div>
                   <div class="col-lg-1">
                   <img
                     class="artist-popular-img"
@@ -146,22 +248,55 @@ const renderTopTracks = () => {
                 <div class="col-lg-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
               </div>`;
   });
-  const container = document.querySelector(".artist-popular-chart"); // 처음 한줄만 적용하면 자동으로 아래줄 완성
+  topTracksHTML += `<div class="read-more">자세히 보기</div></div>`;
+
+  const container = document.querySelector(".artist-popular-chart");
   container.innerHTML = topTracksHTML;
 
-  // hover 이벤트리스너
-  const trackElements = container.querySelectorAll(".artist-popular-chart"); // 차트 5개 모두 순회
-  trackElements.forEach((trackElement) => {
-    trackElement.addEventListener("mouseenter", () => {
-      trackElement.style.backgroundColor = "#2A2E33";
-      trackElement.querySelector(".heart-icon").style.display = "inline-block";
-      trackElement.querySelector(".more-icon").style.display = "inline-block";
-    });
+  const trackElements = container.querySelectorAll(".artist-popular-chart");
+  chartHoverEvents(trackElements);
 
-    trackElement.addEventListener("mouseleave", () => {
-      trackElement.style.backgroundColor = "";
-      trackElement.querySelector(".heart-icon").style.display = "none";
-      trackElement.querySelector(".more-icon").style.display = "none";
+  // 자세히보기 클릭 이벤트
+  const readMore = document.querySelector(".read-more");
+  readMore.addEventListener("click", () => {
+    let additionalTracksHTML = `<div class="additional-tracks artist-popular-charts-container">`;
+    topTrackList.slice(5).forEach((list, index) => {
+      const duration = formatDuration(list.duration_ms);
+      additionalTracksHTML += `<div class="row artist-popular-chart">
+                <div class="col-lg-1 text-center">${index + 6}</div>
+                <div class="col-lg-1"><i class="fa-solid fa-play play-icon"></i></div>
+                  <div class="col-lg-1">
+                  <img
+                    class="artist-popular-img"
+                    src="${list.album.images[0].url}"
+                  />
+                </div>
+                <div class="col-lg-4 artist-song-name">${list.name}</div>
+                <div class="col-lg-2">${list.artists[0].name}</div>
+                <div class="col-lg-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
+                <div class="col-lg-1 text-center">${duration}</div>
+                <div class="col-lg-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
+              </div>`;
+    });
+    additionalTracksHTML += `<div class="brief-view">간단히 보기</div></div>`;
+
+    document
+      .querySelector(".artist-popular-chart")
+      .insertAdjacentHTML("beforeend", additionalTracksHTML);
+
+    const additionalTrackElements = document.querySelectorAll(
+      ".additional-tracks .artist-popular-chart"
+    );
+    chartHoverEvents(additionalTrackElements);
+
+    readMore.style.display = "none";
+
+    const briefView = container.querySelector(".brief-view");
+    briefView.addEventListener("click", () => {
+      const additionalTrackContainer =
+        container.querySelector(".additional-tracks");
+      additionalTrackContainer.remove();
+      readMore.style.display = "inline";
     });
   });
 };
@@ -184,4 +319,35 @@ const fetchArtistTopRelated = async (artistURL, token) => {
 
   const artistData = await response.json();
   console.log("fetchArtistTopRelated", artistData);
+
+  recommendedArtistList = artistData.artists;
+  console.log(recommendedArtistList);
+  recommendedArtist();
+};
+
+// 비슷한 아티스트 추천
+const recommendedArtist = () => {
+  let recommendedArtistHTML = ``;
+  recommendedArtistList.forEach((list) => {
+    recommendedArtistHTML += `
+    <div class="contents-card">
+   <div class="card-img-box position-relative">
+    <div class="card-play-btn"></div>
+    <div class="card-img card-artist-img">
+      <img
+        src="${list.images[1].url}"
+        alt=""
+      />
+    </div>
+  </div>
+  <div class="card-text">
+    <p class="card-title artist-card-title">${list.name}</p>
+    <p class="card-subtitle">${
+      list.followers.total.toLocaleString() + " " + "followers"
+    }</p>
+  </div>
+</div>`;
+  });
+  document.getElementById("artist-artist-rec").innerHTML =
+    recommendedArtistHTML;
 };
