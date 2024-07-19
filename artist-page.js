@@ -1,4 +1,5 @@
 let url;
+let getArtistId;
 let artistNames = [];
 let clickedName;
 
@@ -6,7 +7,8 @@ let topTrackList = [];
 let recommendedArtistList = [];
 let artistAlbumList = [];
 let artistSingleEPsList = [];
-let getAlbumList = []
+let artistPopularMusicList = []
+
 
 // 토큰 설정
 const getAccessToken = async (CLIENT_ID, CLIENT_SECRET) => {
@@ -46,30 +48,12 @@ const callSpotifyAPI = async () => {
   console.log(data.artists.items[0].id);
   console.log(data.artists.items[0].href);
   url = data.artists.items[0].href;
+  getArtistId = data.artists.items[0].id
   fetchArtist(url, token);
   fetchArtistAlbum(url + "/albums", token);
   fetchArtistTopTrack(url + "/top-tracks", token);
   fetchArtistTopRelated(url + "/related-artists", token);
-  fetchGetAlbums(token)
 };
-
-// 앨범 정보 fetch
-const fetchGetAlbums = async (token) => {
-    const url = `https://api.spotify.com/v1/search?q=${clickedName}&type=album`;
-  
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  
-   const albumData = await response.json();
-   console.log("fetchAlbum", albumData)
-
-   getAlbumList = albumData.albums
-   console.log(getAlbumList)
-  };
-
 
 // 메인페이지 아트스트 클릭 이벤트 (변경필요)
 const artistText = document.querySelector(".artist-artist-name");
@@ -182,7 +166,7 @@ const artistSingleEPs = () => {
       <div class="card-text">
         <p class="card-title artist-card-title">${list.name.length>12?list.name.substring(0,10) + "...":list.name}</p>
         <p class="card-subtitle">${
-          list.release_date.slice(0, 4) , " &middot; " , list.total_tracks <= 3
+          list.release_date.slice(0, 4) + " &middot; " , list.total_tracks <= 3
             ? "싱글"
             : "EP"
         }</p>
@@ -207,8 +191,10 @@ const fetchArtistTopTrack = async (artistURL, token) => {
   console.log("fetchArtistTopTrack", artistData);
 
   topTrackList = artistData.tracks;
+  artistPopularMusicList = artistData.tracks;
   console.log(topTrackList);
   renderTopTracks();
+  artistPopularMusic()
 };
 
 // 차트 hover 함수
@@ -233,19 +219,19 @@ const renderTopTracks = () => {
   topTrackList.slice(0, 5).forEach((list, index) => {
     const duration = formatDuration(list.duration_ms);
     topTracksHTML += `<div class="row artist-popular-chart">
-                <div class="col-lg-1 text-center">${index + 1}</div>
-                <div class="col-lg-1"><i class="fa-solid fa-play play-icon"></i></div>
-                  <div class="col-lg-1">
+                <div class="col-1 text-center">${index + 1}</div>
+                <div class="col-1"><i class="fa-solid fa-play play-icon"></i></div>
+                  <div class="col-1">
                   <img
                     class="artist-popular-img"
                     src="${list.album.images[0].url}"
                   />
                 </div>
-                <div class="col-lg-4 artist-song-name">${list.name}</div>
-                <div class="col-lg-2">${list.artists[0].name}</div>
-                <div class="col-lg-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
-                <div class="col-lg-1 text-center">${duration}</div>
-                <div class="col-lg-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
+                <div class="col-4 artist-song-name">${list.name}</div>
+                <div class="col-2">${list.artists[0].name}</div>
+                <div class="col-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
+                <div class="col-1 text-center">${duration}</div>
+                <div class="col-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
               </div>`;
   });
   topTracksHTML += `<div class="read-more">자세히 보기</div></div>`;
@@ -263,19 +249,19 @@ const renderTopTracks = () => {
     topTrackList.slice(5).forEach((list, index) => {
       const duration = formatDuration(list.duration_ms);
       additionalTracksHTML += `<div class="row artist-popular-chart">
-                <div class="col-lg-1 text-center">${index + 6}</div>
-                <div class="col-lg-1"><i class="fa-solid fa-play play-icon"></i></div>
-                  <div class="col-lg-1">
+                <div class="col-1 text-center">${index + 6}</div>
+                <div class="col-1"><i class="fa-solid fa-play play-icon"></i></div>
+                  <div class="col-1">
                   <img
                     class="artist-popular-img"
                     src="${list.album.images[0].url}"
                   />
                 </div>
-                <div class="col-lg-4 artist-song-name">${list.name}</div>
-                <div class="col-lg-2">${list.artists[0].name}</div>
-                <div class="col-lg-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
-                <div class="col-lg-1 text-center">${duration}</div>
-                <div class="col-lg-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
+                <div class="col-4 artist-song-name">${list.name}</div>
+                <div class="col-2 artist-chart-name">${list.artists[0].name}</div>
+                <div class="col-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
+                <div class="col-1 text-center">${duration}</div>
+                <div class="col-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
               </div>`;
     });
     additionalTracksHTML += `<div class="brief-view">간단히 보기</div></div>`;
@@ -307,6 +293,35 @@ const formatDuration = (durationMs) => {
   const seconds = Math.floor((durationMs % 60000) / 1000);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
+
+// 아티스트 인기 음악
+const artistPopularMusic = () => {
+    let artistPopularMusicListHTML = ``;
+    artistPopularMusicList.forEach((list) => {
+        artistPopularMusicListHTML += `
+          <div class="contents-card">
+         <div class="card-img-box position-relative">
+          <div class="card-play-btn"></div>
+          <div class="card-img">
+            <img
+              src="${list.album.images[0].url}"
+              alt=""
+            />
+          </div>
+        </div>
+        <div class="card-text">
+          <p class="card-title artist-card-title">${list.name}</p>
+          <p class="card-subtitle">${
+            list.total_tracks <= 3 ? "싱글":list.total_tracks <= 7? "EP" : "앨범"
+          }</p>
+        </div>
+      </div>`;
+    });
+    document.getElementById("artist-popular-music").innerHTML = artistPopularMusicListHTML;
+  };
+
+
+
 
 // 비슷한 아티스트 정보 fetch
 const fetchArtistTopRelated = async (artistURL, token) => {
