@@ -15,6 +15,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="style.css" />
+    <script src="apikey.js"></script>
   </head>
 
   <body>
@@ -25,7 +26,7 @@
           class="d-flex flex-md-column flex-row justify-content-between"
         >
           <a href="#" class="logo-box">
-            <img src="img/logo.png" alt="Spotify Logo" class="main-logo" />
+            <i class="fa-brands fa-spotify"></i><span> Spotify</span>
           </a>
           <ul class="menu d-flex flex-md-column flex-row">
             <li>
@@ -47,7 +48,41 @@
               </button>
             </li>
           </ul>
-          <div class="weather-window">날씨 보여주는 창?</div>
+          <div class="weather-window d-md-block d-none">
+            <div id="map"></div>
+            <input
+              type="text"
+              id="locationContent"
+              placeholder="Enter content here"
+              style="margin: 5px 10px 5px 4px; width: 210px"
+            />
+            <div class="locationMarkers">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="addMarkerButton"
+                style="width: 210px; margin: 4px"
+              >
+                Add Marker
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="mySiteButton"
+                style="width: 210px; margin: 4px"
+              >
+                My Location
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                id="deleteMarkerButton"
+                style="width: 210px; margin: 4px"
+              >
+                Delete Marker
+              </button>
+            </div>
+          </div>
         </nav>
         <footer class="left-footer d-md-block d-none">
           <div class="left-footer-link-box">
@@ -85,140 +120,140 @@
             <button class="log-in-btn">로그인</button>
           </div>
         </header>
-
-        <section id="section">
-          <section id="artist-header">
-            <!--이후로 삭제 필요-->
-            <div class="overlay-text">
-              <!--변경필요-->
-              <div class="artist-artist-name">NewJeans</div>
-              <!--변경필요-->
-              <div class="artist-monthly-listener">followers</div>
-              <span class="artist-button-area"
-                ><button>팔로우하기</button></span
-              >
-            </div>
-            <div class="artist-card-img-box">
-              <div class="artist-card-img">
-                <img
-                  src="https://i.scdn.co/image/ab6761610000517480668ba2b15094d083780ea9"
-                  alt=""
-                />
+        <div class="section-footer-container">
+          <section id="section">
+            <section id="artist-header">
+              <div class="overlay-text">
+                <div class="artist-artist-name">이름</div>
+                <div class="artist-monthly-listener">followers</div>
+                <span class="artist-button-area"
+                  ><button>팔로우하기</button></span
+                >
               </div>
-              <div class="artist-card-play-btn"></div>
-            </div>
+              <div class="artist-card-img-box">
+                <div class="artist-card-img">
+                  <img
+                    src="https://i.scdn.co/image/ab6761610000517480668ba2b15094d083780ea9"
+                    alt=""
+                  />
+                </div>
+                <div class="artist-card-play-btn"></div>
+              </div>
+            </section>
+            <section>
+              <div class="artist-popular">
+                <div class="contents-header">
+                  <a href="#" class="contents-header-title h4 text-white"
+                    >인기</a
+                  >
+                </div>
+                <div class="row artist-popular-chart">
+                  <!--동적으로 수정-->
+                </div>
+              </div>
+
+              <!--여기서부터 반복-->
+              <div class="contents-container d-flex flex-column gap-4">
+                <div class="contents-line">
+                  <div class="contents-header">
+                    <a href="#" class="contents-header-title h4 text-white"
+                      >인기 음악</a
+                    >
+                  </div>
+                  <div class="card-container" id="artist-popular-music">
+                    <!--동적으로 수정-->
+                  </div>
+                </div>
+
+                <div class="contents-line">
+                  <div class="contents-header">
+                    <a href="#" class="contents-header-title h4 text-white"
+                      >앨범</a
+                    >
+                  </div>
+                  <div class="card-container" id="artist-album">
+                    <!--동적으로 수정-->
+                  </div>
+                </div>
+
+                <div class="contents-line">
+                  <div class="contents-header">
+                    <a href="#" class="contents-header-title h4 text-white"
+                      >싱글 및 EP</a
+                    >
+                  </div>
+                  <div class="card-container" id="artist-single-eps">
+                    <!--동적으로 수정-->
+                  </div>
+                </div>
+
+                <div class="contents-line">
+                  <div class="contents-header">
+                    <a href="#" class="contents-header-title h4 text-white"
+                      >추천 아티스트</a
+                    >
+                  </div>
+                  <div class="card-container" id="artist-artist-rec">
+                    <!--동적으로 수정-->
+                  </div>
+                </div>
+              </div>
+            </section>
           </section>
-          <section>
-            <div class="artist-popular">
-              <div class="contents-header">
-                <a href="#" class="contents-header-title h4 text-white">인기</a>
-              </div>
-              <div class="row artist-popular-chart">
-                <!--동적으로 수정-->
-              </div>
+
+          <footer class="right-footer">
+            <div class="right-footer-top">
+              <ul class="right-footer-links">
+                <li>
+                  <ul class="f-sub_menu">
+                    <li class="right-footer-title">회사</li>
+                    <li><a href="#" class="right-footer-item">상세정보</a></li>
+                    <li><a href="#" class="right-footer-item">채용정보</a></li>
+                    <li>
+                      <a href="#" class="right-footer-item">For the Record</a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <ul class="f-sub_menu">
+                    <li class="right-footer-title">커뮤니티</li>
+                    <li><a href="#" class="right-footer-item">아티스트</a></li>
+                    <li><a href="#" class="right-footer-item">개발자</a></li>
+                    <li><a href="#" class="right-footer-item">투자자</a></li>
+                    <li><a href="#" class="right-footer-item">공급업체</a></li>
+                  </ul>
+                </li>
+                <li>
+                  <ul class="f-sub_menu">
+                    <li class="right-footer-title">유용한 링크</li>
+                    <li><a href="#" class="right-footer-item">지원</a></li>
+                  </ul>
+                </li>
+              </ul>
+              <ul class="f-social">
+                <li>
+                  <a href="#" class="social-icon"
+                    ><i class="fa-brands fa-instagram"></i
+                  ></a>
+                </li>
+                <li>
+                  <a href="#" class="social-icon"
+                    ><i class="fa-brands fa-twitter"></i
+                  ></a>
+                </li>
+                <li>
+                  <a href="#" class="social-icon"
+                    ><i class="fa-brands fa-facebook-f"></i
+                  ></a>
+                </li>
+              </ul>
             </div>
-
-            <!--여기서부터 반복-->
-            <div class="contents-container d-flex flex-column gap-4">
-              <div class="contents-line">
-                <div class="contents-header">
-                  <a href="#" class="contents-header-title h4 text-white"
-                    >인기 음악</a
-                  >
-                </div>
-                <div class="card-container" id="artist-popular-music">
-                  <!--동적으로 수정-->
-                </div>
-              </div>
-
-              <div class="contents-line">
-                <div class="contents-header">
-                  <a href="#" class="contents-header-title h4 text-white"
-                    >앨범</a
-                  >
-                </div>
-                <div class="card-container" id="artist-album">
-                  <!--동적으로 수정-->
-                </div>
-              </div>
-
-              <div class="contents-line">
-                <div class="contents-header">
-                  <a href="#" class="contents-header-title h4 text-white"
-                    >싱글 및 EP</a
-                  >
-                </div>
-                <div class="card-container" id="artist-single-eps">
-                  <!--동적으로 수정-->
-                </div>
-              </div>
-
-              <div class="contents-line">
-                <div class="contents-header">
-                  <a href="#" class="contents-header-title h4 text-white"
-                    >추천 아티스트</a
-                  >
-                </div>
-                <div class="card-container" id="artist-artist-rec">
-                  <!--동적으로 수정-->
-                </div>
-              </div>
+            <!-- .right-footer-top -->
+            <div class="right-footer-bottom">
+              <span class="copyright">&copy; 2024 Noonatify</span>
             </div>
-          </section>
-        </section>
-
-        <footer class="right-footer">
-          <div class="right-footer-top">
-            <ul class="right-footer-links">
-              <li>
-                <ul class="f-sub_menu">
-                  <li class="right-footer-title">회사</li>
-                  <li><a href="#" class="right-footer-item">상세정보</a></li>
-                  <li><a href="#" class="right-footer-item">채용정보</a></li>
-                  <li>
-                    <a href="#" class="right-footer-item">For the Record</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <ul class="f-sub_menu">
-                  <li class="right-footer-title">커뮤니티</li>
-                  <li><a href="#" class="right-footer-item">아티스트</a></li>
-                  <li><a href="#" class="right-footer-item">개발자</a></li>
-                  <li><a href="#" class="right-footer-item">투자자</a></li>
-                  <li><a href="#" class="right-footer-item">공급업체</a></li>
-                </ul>
-              </li>
-              <li>
-                <ul class="f-sub_menu">
-                  <li class="right-footer-title">유용한 링크</li>
-                  <li><a href="#" class="right-footer-item">지원</a></li>
-                </ul>
-              </li>
-            </ul>
-            <ul class="f-social">
-              <li>
-                <a href="#" class="social-icon"
-                  ><i class="fa-brands fa-instagram"></i
-                ></a>
-              </li>
-              <li>
-                <a href="#" class="social-icon"
-                  ><i class="fa-brands fa-twitter"></i
-                ></a>
-              </li>
-              <li>
-                <a href="#" class="social-icon"
-                  ><i class="fa-brands fa-facebook-f"></i
-                ></a>
-              </li>
-            </ul>
-          </div>
-          <!-- .right-footer-top -->
-          <div class="right-footer-bottom">
-            <span class="copyright">&copy; 2024 Noonatify</span>
-          </div>
-        </footer>
+          </footer>
+        </div>
       </main>
     </div>
     <!-- #wrap -->
@@ -227,6 +262,8 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
-    <script src="artist-page.js"></script>
+    <script src="apikey.js"></script>
+    <script src="main.js"></script>
+    <script src="./js/artist-page.js" type="module"></script>
   </body>
 </html>

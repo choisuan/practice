@@ -9,14 +9,17 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
+  <script src="apikey.js"></script>
 </head>
 
 <body>
+  <div class="spinner" id="spinner"></div>
   <div id="wrap" class="bg-black d-flex flex-md-row flex-column">
     <div class="left-section d-flex flex-column justify-content-between">
       <nav id="nav" class="d-flex flex-md-column flex-row  justify-content-between">
         <a href="#" class="logo-box">
-          <img src="img/logo.png" alt="Spotify Logo" class="main-logo">
+          <!-- <img src="img/logo.png" alt="Spotify Logo" class="main-logo" /> -->
+          <i class="fa-brands fa-spotify"></i><span> Spotify</span>
         </a>
         <ul class="menu d-flex flex-md-column flex-row">
           <li>
@@ -25,21 +28,31 @@
               홈
             </button>
           </li>
-          <li>
-            <button class="menu-btn">
-              <i class="fa-solid fa-sun"></i>
-              날씨 추천곡
-            </button>
-          </li>
           <li class="d-none d-sm-block">
-            <button class="menu-btn">
-              <i class="fa-solid fa-magnifying-glass"></i>
+            <button class="menu-btn weather-search-btn">
+              <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
               검색
             </button>
           </li>
+          <li>
+            <button class="menu-btn weather-menu-btn">
+              <i class="fa-solid fa-sun" aria-hidden="true"></i>
+              날씨 추천곡
+            </button>
+          </li>
         </ul>
-        <div class="weather-window">
-          날씨 보여주는 창?
+        <div class="weather-window d-md-block d-none">
+          <div id="map"></div>
+          <input type="text" id="locationContent" placeholder="Enter content here"
+            style="margin: 5px 10px 5px 4px; width:210px;">
+          <div class="locationMarkers">
+            <button type="button" class="btn btn-secondary" id="addMarkerButton" style="width:210px;margin: 4px;">Add
+              Marker</button>
+            <button type="button" class="btn btn-secondary" id="mySiteButton" style="width:210px; margin: 4px;">My
+              Location</button>
+            <button type="button" class="btn btn-secondary" id="deleteMarkerButton"
+              style="width:210px;margin: 4px;">Delete Marker</button>
+          </div>
         </div>
       </nav>
       <footer class="left-footer d-md-block d-none">
@@ -69,6 +82,12 @@
             <i class="fa-solid fa-chevron-right"></i>
           </button>
         </div>
+        <div class="search">
+          <form class="search-submit">
+            <input id="search-input" class="search-input" type="text" placeholder="검색어를 입력하세요" />
+            <span class="search-span"><i class="fa-solid fa-magnifying-glass"></i></span>
+          </form>
+        </div>
         <div class="header-right d-none d-sm-block">
           <button class="sign-up-btn">가입하기</button>
           <button class="log-in-btn">로그인</button>
@@ -76,8 +95,303 @@
       </header>
       <div class="section-footer-container">
         <section id="section">
-          <div class="contents-container d-flex flex-column gap-4">
+          <div class="contents-container d-flex flex-column gap-4 main_weather_playlist">
             <div class="contents-line">
+              <div class="contents-header weather_playlist_header">
+                <h1 class="contents-header-title h4 text-white">
+                  <i class="fa-solid fa-sun sun" aria-hidden="true"></i> 오늘
+                  날씨와 어울리는 플레이리스트
+                </h1>
+                <button class="contents-header-show-more weather-row-more" onclick="showTwoLines(this)">
+                  더보기
+                </button>
+              </div>
+              <!---->
+
+              <div class="card-container weather-playlist-row">
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://seed-mix-image.spotifycdn.com/v6/img/desc/Sunshine/en/large"
+                        alt="Sunshine Mix" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1EIhkGftn1D0Mh" class="weather-playlist-more"
+                      target="_blank">
+                      Sunshine Mix
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://i.scdn.co/image/ab67706f00000003e30f54d8b2a938d6c5fc13a0" alt="Sunny Day" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1DX1BzILRveYHb" class="weather-playlist-more"
+                      target="_blank">
+                      Sunny Day
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://i.scdn.co/image/ab67706f00000003f3ab60ea48380193bf6c3bd0"
+                        alt="Summer Sunshine Reggae" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1DXbwoaqxaoAVr" class="weather-playlist-more"
+                      target="_blank">
+                      Summer Sunshine Reggae...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebb01489ca2656b244323682f2c"
+                        alt="driving on a sunny summer day" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/5DJ1rP5evelj6wYSxqnjzX" class="weather-playlist-more"
+                      target="_blank">
+                      driving on a sunny summer day...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbb7aad6ecfb7620ce2aa3a129"
+                        alt="POOL PARTY 2024 💦 SUMMER HITS" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/4nFTwoPp8L6uato870FdW3" class="weather-playlist-more"
+                      target="_blank">
+                      POOL PARTY 2024 💦 SUMMER HITS...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://seed-mix-image.spotifycdn.com/v6/img/desc/Happy%20Sunshine/en/large"
+                        alt="Happy Sunshine Mix" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1EIh0gn0qhBsTI" class="weather-playlist-more"
+                      target="_blank">
+                      Happy Sunshine Mix
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebb7a87e971d384d7742a9e05f9"
+                        alt="SUMMER 2024 🌞 TOP 100 SONGS" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/11X76c5MphTG1VgKmC7hgb" class="weather-playlist-more"
+                      target="_blank">
+                      SUMMER 2024 🌞 TOP 100 SONGS...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbc6933df744eb5f05e6463f20"
+                        alt="☀️Sunny day vibes🌷" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/2RTmyxpcu6aOyd9AqukEYe" class="weather-playlist-more"
+                      target="_blank">
+                      ☀️Sunny day vibes🌷
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://i.scdn.co/image/ab67706f0000000303ef984c282b47ab16fa9414" alt="Sunny Beats" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1DXbtuVQL4zoey" class="weather-playlist-more"
+                      target="_blank">
+                      Sunny Beats
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbf118191b5a6d33f7785d2353"
+                        alt="Sunny Day 70’s Vibes 🌞" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/0nXXUlBpqAW9sJngHEiNyW" class="weather-playlist-more"
+                      target="_blank">
+                      Sunny Day 70’s Vibes 🌞...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbf65fcf90662748401034e0a"
+                        alt="Beachy Vibes 2024 🌴 Summer Vibes" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/6D3DlItMlUuqkEHe00JvCL" class="weather-playlist-more"
+                      target="_blank">
+                      Beachy Vibes 2024 🌴 Summer Vibes...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbf2c7ae0427415ebfbb90a781"
+                        alt="Happy Vibes, Sunny Walks☀️" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/78izi5AvaM28vlsgir6wIu" class="weather-playlist-more"
+                      target="_blank">
+                      Happy Vibes, Sunny Walks☀️...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://i.scdn.co/image/ab67706f000000039d9ff0c2c65711d1bcb780aa" alt="Summer Jazz" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1DWTKxc7ZObqeH" class="weather-playlist-more"
+                      target="_blank">
+                      Summer Jazz
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbf614b8c9277d99d7009c61c"
+                        alt="summer lofi 2024☀️lofi summer" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/4gRoFV3lCVoNMsDdPmKy0Z" class="weather-playlist-more"
+                      target="_blank">
+                      summer lofi 2024☀️lofi summer...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-fa.spotifycdn.com/image/ab67706c0000bebba55c259eaf7c84d90adbc30d"
+                        alt="when its finally sunny outside" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/7AhHEE4PCTq10hBWJHJAVC" class="weather-playlist-more"
+                      target="_blank">
+                      when its finally sunny outside...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbf949424cb27fe39717dff909d"
+                        alt="Good Morning Jams 💛☀️" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/4LiKy6WtiREXCmah3Clk9S" class="weather-playlist-more"
+                      target="_blank">
+                      Good Morning Jams 💛☀️...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbf49d778197eb33a0e35e297"
+                        alt="sunny day vibes - summer 2024 🌞" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/2YOG98LwM57tBydYmzSp1J" class="weather-playlist-more"
+                      target="_blank">
+                      sunny day vibes - summer 2024 🌞...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbf87927a2b87f389ce3fdb51"
+                        alt="summer party 2024 🎉 best bangers" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/5omoldq0mMzGquppRHieuh" class="weather-playlist-more"
+                      target="_blank">
+                      summer party 2024 🎉 best bangers...
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://image-cdn-ak.spotifycdn.com/image/ab67706c0000bebbf11fe428de17fb1a3dcddd1"
+                        alt="SUNNY DAY COUNTRY" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/7oJ7iHW8mfd9jmTPK36Q5F" class="weather-playlist-more"
+                      target="_blank">
+                      SUNNY DAY COUNTRY
+                    </a>
+                  </div>
+                </div>
+                <div class="contents-card playlist-item">
+                  <div class="card-img-box position-relative">
+                    <div class="card-img">
+                      <img src="https://i.scdn.co/image/ab67706f00000003e8f9494c88d12a860415992d"
+                        alt="Summer Acoustic" />
+                    </div>
+                  </div>
+                  <div class="card-text">
+                    <a href="https://open.spotify.com/playlist/37i9dQZF1DWUNIrSzKgQbP" class="weather-playlist-more"
+                      target="_blank">
+                      Summer Acoustic
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 날씨 플레이리스트 끝 -->
+          <div class="contents-container d-flex flex-column gap-4">
+            <div class="contents-line" id="main-popular-artist">
               <div class="contents-header">
                 <a href="#" class="contents-header-title h4 text-white">인기 아티스트</a>
                 <button class="contents-header-show-more" onclick="showTwoLines(this)">더 보기</button>
@@ -91,7 +405,7 @@
                     </div>
                   </div>
                   <div class="card-text">
-                    <p class="card-title">NewJeans</p>
+                    <p class="card-title"><a href="artist.html?name=NewJeans" class="artist-link">NewJeans</a></p>
                     <p class="card-subtitle">아티스트</p>
                   </div>
                 </div> <!-- .contents-card -->
@@ -99,11 +413,11 @@
                   <div class="card-img-box">
                     <div class="card-play-btn"></div>
                     <div class="card-img card-artist-img">
-                      <img src="https://i.scdn.co/image/ab6761610000517480668ba2b15094d083780ea9" alt="">
+                      <img src="https://i.scdn.co/image/ab67616100005174573935eb61a1897aeb43c531" alt="">
                     </div>
                   </div>
                   <div class="card-text">
-                    <p class="card-title">NewJeans</p>
+                    <p class="card-title"><a href="artist.html?name=aespa" class="artist-link">aespa</a></p>
                     <p class="card-subtitle">아티스트</p>
                   </div>
                 </div> <!-- .contents-card -->
@@ -111,11 +425,11 @@
                   <div class="card-img-box position-relative">
                     <div class="card-play-btn"></div>
                     <div class="card-img card-artist-img">
-                      <img src="https://i.scdn.co/image/ab6761610000517480668ba2b15094d083780ea9" alt="">
+                      <img src="https://i.scdn.co/image/ab676161000051748fdf3504948498378df71140" alt="">
                     </div>
                   </div>
                   <div class="card-text">
-                    <p class="card-title">NewJeans</p>
+                    <p class="card-title"><a href="artist.html?name=이영지" class="artist-link">이영지</a></p>
                     <p class="card-subtitle">아티스트</p>
                   </div>
                 </div> <!-- .contents-card -->
@@ -219,12 +533,12 @@
                   <div class="card-img-box position-relative">
                     <div class="card-play-btn"></div>
                     <div class="card-img">
-                      <img src="https://i.scdn.co/image/ab67616d00001e02b657fbb27b17e7bd4691c2b2" alt="">
+                      <img src="https://i.scdn.co/image/ab67616d00001e02aa8e7da62fbfae5cb65f8e55" alt="">
                     </div>
                   </div>
                   <div class="card-text">
-                    <p class="card-title">How Sweet</p>
-                    <p class="card-subtitle card-subtitle-artist">NewJeans</p>
+                    <p class="card-title">16 Fantasy</p>
+                    <p class="card-subtitle card-subtitle-artist">이영지</p>
                   </div>
                 </div>
                 <!-- 카드 1장 끝 -->
@@ -232,12 +546,12 @@
                   <div class="card-img-box position-relative">
                     <div class="card-play-btn"></div>
                     <div class="card-img">
-                      <img src="https://i.scdn.co/image/ab67616d00001e02b657fbb27b17e7bd4691c2b2" alt="">
+                      <img src="https://i.scdn.co/image/ab67616d00001e02741fd4807f442af3f7359316" alt="">
                     </div>
                   </div>
                   <div class="card-text">
-                    <p class="card-title">How Sweet</p>
-                    <p class="card-subtitle card-subtitle-artist">NewJeans</p>
+                    <p class="card-title">GOLDEN</p>
+                    <p class="card-subtitle card-subtitle-artist">정국</p>
                   </div>
                 </div>
                 <!-- 카드 1장 끝 -->
@@ -368,7 +682,13 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=81e1670a7c5674de61193229e636e542"></script>
   <script src="main.js"></script>
+  <script src="js/main-page.js"></script>
+  <script src="js/weather.js" type="module"></script>
+  <script src="js/search.js"></script>
+  <script src="js/album.js"></script>
+  <script src="js/artist-page.js" type="module"></script>
 </body>
 
 </html>

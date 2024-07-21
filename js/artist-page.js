@@ -1,17 +1,19 @@
-let url;
+import config from './apikey.js';
+
+let artistUrl;
 let getArtistId;
-let artistNames = [];
-let clickedName;
+let getArtistNames = [];
+let clickedArtistName;
+let artistNameInfo;
 
 let topTrackList = [];
 let recommendedArtistList = [];
 let artistAlbumList = [];
 let artistSingleEPsList = [];
-let artistPopularMusicList = []
-
+let artistPopularMusicList = [];
 
 // 토큰 설정
-const getAccessToken = async (CLIENT_ID, CLIENT_SECRET) => {
+const getToken_artist = async (CLIENT_ID, CLIENT_SECRET) => {
   const encodedCredentials = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
 
   const response = await fetch(`https://accounts.spotify.com/api/token`, {
@@ -27,14 +29,14 @@ const getAccessToken = async (CLIENT_ID, CLIENT_SECRET) => {
   return data.access_token;
 };
 
-// Spotify API 호출(변경필요)
-const callSpotifyAPI = async () => {
-  const CLIENT_ID = `03e132602b064240889cad723e1e7500`;
-  const CLIENT_SECRET = `5eb49937181f4e58bf9a6bb9fdd6a0b7`;
+// Spotify API 호출
+const callSpotifyAPI_artist = async () => {
+  const CLIENT_ID = config.clientID
+  const CLIENT_SECRET = config.clientSecret
 
-  const token = await getAccessToken(CLIENT_ID, CLIENT_SECRET);
+  const token = await getToken_artist(CLIENT_ID, CLIENT_SECRET);
   const response = await fetch(
-    `https://api.spotify.com/v1/search?q=${clickedName}&type=artist`,
+    `https://api.spotify.com/v1/search?q=${artistNameInfo}&type=artist`,
     {
       method: "GET",
       headers: {
@@ -47,20 +49,49 @@ const callSpotifyAPI = async () => {
   console.log(data.artists.items[0].name);
   console.log(data.artists.items[0].id);
   console.log(data.artists.items[0].href);
-  url = data.artists.items[0].href;
-  getArtistId = data.artists.items[0].id
-  fetchArtist(url, token);
-  fetchArtistAlbum(url + "/albums", token);
-  fetchArtistTopTrack(url + "/top-tracks", token);
-  fetchArtistTopRelated(url + "/related-artists", token);
+  artistUrl = data.artists.items[0].href;
+  getArtistId = data.artists.items[0].id;
+  fetchArtist(artistUrl, token);
+  fetchArtistAlbum(artistUrl + "/albums", token);
+  fetchArtistTopTrack(artistUrl + "/top-tracks", token);
+  fetchArtistTopRelated(artistUrl + "/related-artists", token);
 };
 
-// 메인페이지 아트스트 클릭 이벤트 (변경필요)
-const artistText = document.querySelector(".artist-artist-name");
-artistText.addEventListener("click", () => {
-  clickedName = artistText.textContent.toLocaleLowerCase();
-  console.log("클릭된 아티스트 이름: ", clickedName);
-  callSpotifyAPI();
+// 메인페이지 아티스트 클릭 이벤트
+document.addEventListener("DOMContentLoaded", () => {
+  const artistNameText = document.querySelectorAll(".card-title .artist-link");
+
+  if (artistNameText.length > 0) {
+    // index.html에서 실행되는 로직
+    artistNameText.forEach((name) => {
+      name.addEventListener("click", (event) => {
+        event.preventDefault(); // 링크 기본 동작 막기
+        clickedArtistName = event.target.innerText.toLocaleLowerCase();
+        getArtistNames.push(clickedArtistName);
+        console.log("클릭된 아티스트 이름:", clickedArtistName);
+        console.log("현재 저장된 아티스트 이름들:", getArtistNames);
+
+        // artist.html로 이동하며 아티스트 이름 전달
+        window.location.href = `artist.html?name=${encodeURIComponent(
+          clickedArtistName
+        )}`;
+      });
+    });
+  } else {
+    // artist.html에서 실행되는 로직
+    const urlParams = new URLSearchParams(window.location.search);
+    artistNameInfo = urlParams.get("name");
+
+    if (artistNameInfo) {
+      document.querySelector(".artist-artist-name").innerText =
+        decodeURIComponent(artistNameInfo);
+      console.log("현재 아티스트 이름:", artistNameInfo);
+
+      callSpotifyAPI_artist(artistNameInfo);
+    } else {
+      console.error("아티스트 이름이 URL 파라미터에 포함되지 않았습니다.");
+    }
+  }
 });
 
 // 아티스트 정보 fetch
@@ -71,17 +102,19 @@ const fetchArtist = async (artistURL, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
+  if (!response.ok) {
+    throw new Error("Failed to fetch Spotify data");
+  }
   const artistData = await response.json();
   console.log("fetchArtist", artistData);
   artistHeader(artistData);
 };
 
-// 아티스트 페이지 헤더(변경필요)
+// 아티스트 페이지 헤더
 const artistHeader = (artistData) => {
   let artistHeaderHTML = `<section id="artist-header">
             <div class="overlay-text">
-            <div class="artist-artist-name">NewJeans</div>
+            <div class="artist-artist-name">${artistData.name}</div>
             <div class="artist-monthly-listener">${
               artistData.followers.total.toLocaleString() + " " + "followers"
             }</div>
@@ -91,7 +124,9 @@ const artistHeader = (artistData) => {
               <div class="artist-card-img">  
                 <img
                   src="${artistData.images[1].url}"
-                  alt=""
+                  alt="${
+                    artistData.name
+                  }" onerror="this.onerror=null; this.src='https://via.placeholder.com/150';"
                 />
               </div>
               <div class="artist-card-play-btn"></div>
@@ -108,7 +143,9 @@ const fetchArtistAlbum = async (artistURL, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
+  if (!response.ok) {
+    throw new Error("Failed to fetch Spotify data");
+  }
   const artistData = await response.json();
   console.log("fetchArtistAlbum", artistData);
 
@@ -131,7 +168,9 @@ const artistAlbum = () => {
         <div class="card-img">
           <img
             src="${list.images[1].url}"
-            alt=""
+            alt="${
+              list.name
+            }" onerror="this.onerror=null; this.src='https://via.placeholder.com/150';"
           />
         </div>
       </div>
@@ -164,11 +203,12 @@ const artistSingleEPs = () => {
         </div>
       </div>
       <div class="card-text">
-        <p class="card-title artist-card-title">${list.name.length>12?list.name.substring(0,10) + "...":list.name}</p>
+        <p class="card-title artist-card-title">${
+          list.name.length > 12 ? list.name.substring(0, 10) + "..." : list.name
+        }</p>
         <p class="card-subtitle">${
-          list.release_date.slice(0, 4) + " &middot; " , list.total_tracks <= 3
-            ? "싱글"
-            : "EP"
+          (list.release_date.slice(0, 4) + " &middot; ",
+          list.total_tracks <= 3 ? "싱글" : "EP")
         }</p>
       </div>
     </div>`;
@@ -186,7 +226,9 @@ const fetchArtistTopTrack = async (artistURL, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
+  if (!response.ok) {
+    throw new Error("Failed to fetch Spotify data");
+  }
   const artistData = await response.json();
   console.log("fetchArtistTopTrack", artistData);
 
@@ -194,7 +236,7 @@ const fetchArtistTopTrack = async (artistURL, token) => {
   artistPopularMusicList = artistData.tracks;
   console.log(topTrackList);
   renderTopTracks();
-  artistPopularMusic()
+  artistPopularMusic();
 };
 
 // 차트 hover 함수
@@ -219,19 +261,21 @@ const renderTopTracks = () => {
   topTrackList.slice(0, 5).forEach((list, index) => {
     const duration = formatDuration(list.duration_ms);
     topTracksHTML += `<div class="row artist-popular-chart">
-                <div class="col-1 text-center">${index + 1}</div>
-                <div class="col-1"><i class="fa-solid fa-play play-icon"></i></div>
-                  <div class="col-1">
+                <div class="col-1 col-sm-1 text-center">${index + 1}</div>
+                <div class="col-1 col-sm-1"><i class="fa-solid fa-play play-icon"></i></div>
+                  <div class="col-1 col-sm-1">
                   <img
                     class="artist-popular-img"
                     src="${list.album.images[0].url}"
                   />
                 </div>
-                <div class="col-4 artist-song-name">${list.name}</div>
-                <div class="col-2">${list.artists[0].name}</div>
-                <div class="col-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
-                <div class="col-1 text-center">${duration}</div>
-                <div class="col-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
+                <div class="col-4 col-sm-4 artist-song-name">${list.name}</div>
+                <div class="col-2 d-none d-sm-block">${
+                  list.artists[0].name
+                }</div>
+                <div class="col-1 col-sm-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
+                <div class="col-1 col-sm-1 text-center">${duration}</div>
+                <div class="col-1 col-sm-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
               </div>`;
   });
   topTracksHTML += `<div class="read-more">자세히 보기</div></div>`;
@@ -249,19 +293,21 @@ const renderTopTracks = () => {
     topTrackList.slice(5).forEach((list, index) => {
       const duration = formatDuration(list.duration_ms);
       additionalTracksHTML += `<div class="row artist-popular-chart">
-                <div class="col-1 text-center">${index + 6}</div>
-                <div class="col-1"><i class="fa-solid fa-play play-icon"></i></div>
-                  <div class="col-1">
+                <div class="col-1 col-sm-1 text-center">${index + 6}</div>
+                <div class="col-1 col-sm-1"><i class="fa-solid fa-play play-icon"></i></div>
+                  <div class="col-1 col-sm-1">
                   <img
                     class="artist-popular-img"
                     src="${list.album.images[0].url}"
                   />
                 </div>
-                <div class="col-4 artist-song-name">${list.name}</div>
-                <div class="col-2 artist-chart-name">${list.artists[0].name}</div>
-                <div class="col-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
-                <div class="col-1 text-center">${duration}</div>
-                <div class="col-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
+                <div class="col-4 col-sm-4 artist-song-name">${list.name}</div>
+                <div class="col-2 d-none d-sm-block">${
+                  list.artists[0].name
+                }</div>
+                <div class="col-1 col-sm-1 text-center"><i class="fa-regular fa-heart heart-icon" style="display: none"></i></div>
+                <div class="col-1 col-sm-1 text-center">${duration}</div>
+                <div class="col-1 col-sm-1 text-center"><span class="more-icon" style="display: none">&middot;&middot;&middot;</span></div>
               </div>`;
     });
     additionalTracksHTML += `<div class="brief-view">간단히 보기</div></div>`;
@@ -296,9 +342,9 @@ const formatDuration = (durationMs) => {
 
 // 아티스트 인기 음악
 const artistPopularMusic = () => {
-    let artistPopularMusicListHTML = ``;
-    artistPopularMusicList.forEach((list) => {
-        artistPopularMusicListHTML += `
+  let artistPopularMusicListHTML = ``;
+  artistPopularMusicList.forEach((list) => {
+    artistPopularMusicListHTML += `
           <div class="contents-card">
          <div class="card-img-box position-relative">
           <div class="card-play-btn"></div>
@@ -312,16 +358,18 @@ const artistPopularMusic = () => {
         <div class="card-text">
           <p class="card-title artist-card-title">${list.name}</p>
           <p class="card-subtitle">${
-            list.total_tracks <= 3 ? "싱글":list.total_tracks <= 7? "EP" : "앨범"
+            list.total_tracks <= 3
+              ? "싱글"
+              : list.total_tracks <= 7
+              ? "EP"
+              : "앨범"
           }</p>
         </div>
       </div>`;
-    });
-    document.getElementById("artist-popular-music").innerHTML = artistPopularMusicListHTML;
-  };
-
-
-
+  });
+  document.getElementById("artist-popular-music").innerHTML =
+    artistPopularMusicListHTML;
+};
 
 // 비슷한 아티스트 정보 fetch
 const fetchArtistTopRelated = async (artistURL, token) => {
@@ -331,7 +379,9 @@ const fetchArtistTopRelated = async (artistURL, token) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
+  if (!response.ok) {
+    throw new Error("Failed to fetch Spotify data");
+  }
   const artistData = await response.json();
   console.log("fetchArtistTopRelated", artistData);
 
